@@ -1,0 +1,316 @@
+:root {
+    --primary-pastel: #e0e7ff;
+    --secondary-pastel: #f3e8ff;
+    --accent-pastel: #ecfdf5;
+    --purple-pastel: #c4b5fd;
+    --blue-pastel: #a5b4fc;
+    --green-pastel: #86efac;
+    --orange-pastel: #fed7aa;
+    --pink-pastel: #fbcfe8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden;
+}
+
+/* Clean Background */
+.bg-clean {
+    background: #ffffff;
+}
+
+/* Floating Elements */
+.floating-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.3;
+    animation: float 6s ease-in-out infinite;
+}
+
+.shape:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 8s;
+}
+
+.shape:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+    animation-duration: 6s;
+}
+
+.shape:nth-child(3) {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
+    animation-duration: 7s;
+}
+
+.shape:nth-child(4) {
+    top: 40%;
+    right: 20%;
+    animation-delay: 1s;
+    animation-duration: 9s;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+/* Main Animations */
+.fade-in {
+    animation: fadeIn 1.5s ease-out;
+}
+
+.slide-up {
+    animation: slideUp 1s ease-out 0.3s both;
+}
+
+.slide-up-delayed {
+    animation: slideUp 1s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card Enhancements */
+.clean-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.hover-lift:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+}
+
+/* Input Enhancements */
+.input-clean {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.input-clean:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.input-clean::placeholder {
+    transition: opacity 0.3s ease;
+}
+
+.input-clean:focus::placeholder {
+    opacity: 0.5;
+}
+
+/* Button Enhancements */
+.btn-enhanced {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-enhanced:hover::before {
+    left: 100%;
+}
+
+.btn-enhanced:active {
+    transform: scale(0.98);
+}
+
+/* Loading Animation */
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    opacity: 0;
+}
+
+.loading.active::after {
+    opacity: 1;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Subtle Pulse Animation */
+.pulse-subtle {
+    animation: pulseSubtle 3s ease-in-out infinite;
+}
+
+@keyframes pulseSubtle {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-responsive {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+
+    .text-responsive {
+        font-size: 2.5rem;
+    }
+
+    .card-responsive {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .text-responsive {
+        font-size: 2rem;
+    }
+
+    .card-responsive {
+        padding: 1rem;
+    }
+}
+
+/* Success Animation */
+.success-animation {
+    animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Decorative Elements */
+.decorative-line {
+    position: relative;
+    overflow: hidden;
+}
+
+.decorative-line::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--purple-pastel), transparent);
+    animation: lineSlide 4s ease-in-out infinite;
+}
+
+@keyframes lineSlide {
+    0% {
+        left: -100%;
+    }
+    50% {
+        left: 100%;
+    }
+    100% {
+        left: -100%;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a67d8, #6b46c1);
+}
