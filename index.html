@@ -111,18 +111,34 @@
           </div>
         </div>
 
-        <button
-          id="filterBtn"
-          onclick="filterCSV()"
-          class="btn-enhanced w-full text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
-          style="background-color: #6366f1;"
-          aria-label="Filter and download Google Sheet data"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-          <span id="btnText">Filter & Download</span>
-        </button>
+        <div class="flex space-x-3">
+          <button
+            id="displayBtn"
+            onclick="filterAndDisplay()"
+            class="btn-enhanced flex-1 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+            style="background-color: #10b981;"
+            aria-label="Filter and display Google Sheet data"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            <span id="displayBtnText">Filter & Display</span>
+          </button>
+          
+          <button
+            id="filterBtn"
+            onclick="filterCSV()"
+            class="btn-enhanced flex-1 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+            style="background-color: #6366f1;"
+            aria-label="Filter and download Google Sheet data"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <span id="btnText">Filter & Download</span>
+          </button>
+        </div>
       </div>
 
       <!-- Footer -->
@@ -141,6 +157,59 @@
         <p class="text-xs text-gray-400 mt-2">Powered by modern web technologies</p>
       </footer>
     </section>
+
+    <!-- Data Display Modal -->
+    <div id="dataModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+          <div>
+            <h3 class="text-2xl font-bold" style="color: #6366f1;">Filtered Data Preview</h3>
+            <p class="text-gray-600 mt-1" id="modalSubtitle">Showing filtered results</p>
+          </div>
+          <button 
+            onclick="closeModal()" 
+            class="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+            aria-label="Close modal"
+          >
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Modal Content -->
+        <div class="p-6 overflow-auto max-h-[calc(90vh-120px)]">
+          <div id="dataTableContainer" class="overflow-x-auto">
+            <!-- Table will be inserted here -->
+          </div>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
+          <div class="text-sm text-gray-600">
+            <span id="rowCount">0</span> rows found
+          </div>
+          <div class="flex space-x-3">
+            <button 
+              onclick="downloadFromModal()" 
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <span>Download CSV</span>
+            </button>
+            <button 
+              onclick="closeModal()" 
+              class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script src="./js/main.js">
