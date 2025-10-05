@@ -129,13 +129,94 @@ function createDataTable(data) {
         tableHTML += '<tr>';
         headers.forEach((header, index) => {
             const cellValue = row[index] || '';
-            tableHTML += `<td title="${cellValue}">${cellValue}</td>`;
+            const processedCell = processCellContent(cellValue, header, headers, row);
+            tableHTML += `<td title="${cellValue}">${processedCell}</td>`;
         });
         tableHTML += '</tr>';
     });
     tableHTML += '</tbody></table>';
     
     return tableHTML;
+}
+
+function processCellContent(cellValue, columnHeader = '', headers = [], row = []) {
+    if (!cellValue || typeof cellValue !== 'string') {
+        return cellValue || '';
+    }
+
+    // Check if this is a 3P Seller column
+    const isSellerColumn = columnHeader.toLowerCase().includes('3p seller') || 
+                          columnHeader.toLowerCase().includes('seller');
+
+    // Find ASIN column index
+    const asinColumnIndex = headers.findIndex(header => 
+        header && header.toLowerCase().includes('asin')
+    );
+
+    // URL patterns to detect
+    const urlPatterns = [
+        // Google Sheets links
+        /https:\/\/docs\.google\.com\/spreadsheets\/d\/[a-zA-Z0-9-_]+/g,
+        // Amazon ASIN links
+        /https:\/\/www\.amazon\.com\/[^\s]+/g,
+        // General HTTP/HTTPS URLs
+        /https?:\/\/[^\s]+/g,
+        // Email addresses
+        /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g
+    ];
+
+    let processedValue = cellValue;
+
+    // Check each URL pattern
+    urlPatterns.forEach(pattern => {
+        processedValue = processedValue.replace(pattern, (match) => {
+            // Determine if it's an email or URL
+            const isEmail = match.includes('@');
+            const linkText = isEmail ? match : (match.length > 50 ? match.substring(0, 47) + '...' : match);
+            const target = isEmail ? '' : ' target="_blank" rel="noopener noreferrer"';
+            
+            return `<a href="${isEmail ? 'mailto:' + match : match}"${target} class="text-blue-600 hover:text-blue-800 underline transition-colors duration-200">${linkText}</a>`;
+        });
+    });
+
+    // For 3P Seller columns, convert seller names to Amazon seller links with specific ASIN
+    if (isSellerColumn && processedValue && processedValue.trim() !== '' && processedValue.toLowerCase() !== 'n/a') {
+        // Skip if it's already a URL or email
+        if (!processedValue.includes('http') && !processedValue.includes('@')) {
+            const sellerName = processedValue.trim();
+            
+            // Get ASIN from the same row
+            const asin = asinColumnIndex !== -1 ? row[asinColumnIndex] : null;
+            
+            if (asin && asin.trim() !== '') {
+                // Create Amazon seller page URL with specific ASIN
+                const sellerUrl = `https://www.amazon.com/sp?ie=UTF8&seller=${encodeURIComponent(sellerName)}&asin=${asin}`;
+                return `<a href="${sellerUrl}" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-800 underline transition-colors duration-200">${sellerName}</a>`;
+            } else {
+                // Fallback to general seller search if no ASIN
+                const sellerUrl = `https://www.amazon.com/s?me=${encodeURIComponent(sellerName)}`;
+                return `<a href="${sellerUrl}" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-800 underline transition-colors duration-200">${sellerName}</a>`;
+            }
+        }
+    }
+
+    // Check for ASIN patterns (Amazon product IDs) - only for non-seller columns
+    if (!isSellerColumn) {
+        const asinPattern = /\b(B[A-Z0-9]{9})\b/g;
+        processedValue = processedValue.replace(asinPattern, (asin) => {
+            const amazonUrl = `https://www.amazon.com/dp/${asin}`;
+            return `<a href="${amazonUrl}" target="_blank" rel="noopener noreferrer" class="text-orange-600 hover:text-orange-800 underline transition-colors duration-200">${asin}</a>`;
+        });
+    }
+
+    // Check for Google Sheets ID patterns
+    const sheetIdPattern = /\b([a-zA-Z0-9-_]{44})\b/g;
+    processedValue = processedValue.replace(sheetIdPattern, (sheetId) => {
+        const sheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}`;
+        return `<a href="${sheetUrl}" target="_blank" rel="noopener noreferrer" class="text-green-600 hover:text-green-800 underline transition-colors duration-200">${sheetId}</a>`;
+    });
+
+    return processedValue;
 }
 
 function downloadFromModal() {
